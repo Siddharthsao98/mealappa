@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meal App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    #mealList {
+      padding: 20px;
+    }
+
+    .meal {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .meal h3 {
+      margin-top: 0;
+    }
+
+    .meal p {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Meal App</h1>
+    <button id="addMealBtn" class="btn btn-primary">Add Meal</button>
+    <input type="text" id="searchInput" class="form-control" placeholder="Search meals...">
+  </header>
+  <main id="mealList" class="container"></main>
+  <div id="mealModal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Meal</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="mealNameInput" class="form-control" placeholder="Meal Name" required>
+          <textarea id="mealIngredientsInput" class="form-control" placeholder="Ingredients" required></textarea>
+          <textarea id="mealInstructionsInput" class="form-control" placeholder="Instructions" required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="saveMealBtn" type="button" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Meal data
+    let meals = [];
+
+    // Elements
+    const mealList = document.getElementById('mealList');
+    const searchInput = document.getElementById('searchInput');
+    const addMealBtn = document.getElementById('addMealBtn');
+    const mealModal = document.getElementById('mealModal');
+    const saveMealBtn = document.getElementById('saveMealBtn');
+
+    // Event listeners
+    addMealBtn.addEventListener('click', openModal);
+    saveMealBtn.addEventListener('click', saveMeal);
+
+    // Initialize the app
+    loadMeals();
+
+    // Load meals from local storage or use default data
+    function loadMeals() {
+      const storedMeals = localStorage.getItem('meals');
+      if (storedMeals) {
+        meals = JSON.parse(storedMeals);
+        displayMeals();
+      } else {
+        meals = [
+          { name: 'Spaghetti Bolognese', ingredients: 'Pasta, ground beef, tomato sauce', instructions: '1. Cook pasta according to package instructions. 2. Brown ground beef in a pan.
